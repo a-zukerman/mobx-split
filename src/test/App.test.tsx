@@ -3,58 +3,130 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import App from "../App";
 import { renderHook } from "@testing-library/react-hooks";
-import { RootStoreContext } from "../store/RootStore";
+import { RootProvider, RootStore, RootStoreContext } from "../store/RootStore";
+
+const mockCountry = [
+  {
+    name: "Argentina",
+    topLevelDomain: [".ar"],
+    alpha2Code: "AR",
+    alpha3Code: "ARG",
+    callingCodes: ["54"],
+    capital: "Buenos Aires",
+    altSpellings: ["AR", "Argentine Republic", "República Argentina"],
+    region: "Americas",
+    subregion: "South America",
+    population: 43590400,
+    latlng: [-34.0, -64.0],
+    demonym: "Argentinean",
+    area: 2780400.0,
+    gini: 44.5,
+    timezones: ["UTC-03:00"],
+    borders: ["BOL", "BRA", "CHL", "PRY", "URY"],
+    nativeName: "Argentina",
+    numericCode: "032",
+    currencies: [{ code: "ARS", name: "Argentine peso", symbol: "$" }],
+    languages: [
+      {
+        iso639_1: "es",
+        iso639_2: "spa",
+        name: "Spanish",
+        nativeName: "Español",
+      },
+      {
+        iso639_1: "gn",
+        iso639_2: "grn",
+        name: "Guaraní",
+        nativeName: "Avañe'ẽ",
+      },
+    ],
+    translations: {
+      de: "Argentinien",
+      es: "Argentina",
+      fr: "Argentine",
+      ja: "アルゼンチン",
+      it: "Argentina",
+      br: "Argentina",
+      pt: "Argentina",
+      nl: "Argentinië",
+      hr: "Argentina",
+      fa: "آرژانتین",
+    },
+    flag: "https://restcountries.eu/data/arg.svg",
+    regionalBlocs: [
+      {
+        acronym: "USAN",
+        name: "Union of South American Nations",
+        otherAcronyms: ["UNASUR", "UNASUL", "UZAN"],
+        otherNames: [
+          "Unión de Naciones Suramericanas",
+          "União de Nações Sul-Americanas",
+          "Unie van Zuid-Amerikaanse Naties",
+          "South American Union",
+        ],
+      },
+    ],
+    cioc: "ARG",
+  },
+];
 
 test("renders increment logs button", () => {
-  render(<App />);
-  const incrementLogsButton = screen.getByTestId("increment-logs");
-  expect(incrementLogsButton).toBeInTheDocument();
-});
+  const rootStore = new RootStore();
+  rootStore.countryStore.countryData = mockCountry;
 
-test("renders update log data button", () => {
-  render(<App />);
-  const updateLogDataButton = screen.getByTestId("update-logs");
-  expect(updateLogDataButton).toBeInTheDocument();
-});
-
-test("renders number of logs", () => {
-  render(<App />);
-  const numberOfLogsComponent = screen.getByTestId("container-number-of-logs");
-  expect(numberOfLogsComponent).toBeInTheDocument();
-});
-
-test("renders numbers of logs and data", () => {
-  render(<App />);
-  const numberOfLogsComponent = screen.getByTestId(
-    "container-number-of-logs-and-data"
+  render(
+    <RootProvider store={rootStore}>
+      <App />
+    </RootProvider>
   );
-  expect(numberOfLogsComponent).toBeInTheDocument();
+  const incrementLogsButton = screen.getByTestId("country-data");
+  expect(incrementLogsButton).toBe("No country data");
 });
 
-test("increment logs updates store", () => {
-  render(<App />);
-  const { result: context } = renderHook(() => useContext(RootStoreContext));
-  const incrementLogsButton = screen.getByTestId("increment-logs");
+// test("renders update log data button", () => {
+//   render(<App />);
+//   const updateLogDataButton = screen.getByTestId("update-logs");
+//   expect(updateLogDataButton).toBeInTheDocument();
+// });
 
-  const initialCounter = context.current.logsStore.numberOfLogs;
-  expect(initialCounter).toBe(0);
+// test("renders number of logs", () => {
+//   render(<App />);
+//   const numberOfLogsComponent = screen.getByTestId("container-number-of-logs");
+//   expect(numberOfLogsComponent).toBeInTheDocument();
+// });
 
-  fireEvent.click(incrementLogsButton);
+// test("renders numbers of logs and data", () => {
+//   render(<App />);
+//   const numberOfLogsComponent = screen.getByTestId(
+//     "container-number-of-logs-and-data"
+//   );
+//   expect(numberOfLogsComponent).toBeInTheDocument();
+// });
 
-  const updatedCounter = context.current.logsStore.numberOfLogs;
-  expect(updatedCounter).toBe(1);
-});
+// test("increment logs updates store", () => {
+//   render(<App />);
+//   const { result: context } = renderHook(() => useContext(RootStoreContext));
+//   const incrementLogsButton = screen.getByTestId("increment-logs");
 
-test("update logs updates store", () => {
-  render(<App />);
-  const { result: context } = renderHook(() => useContext(RootStoreContext));
-  const updateLogDataButton = screen.getByTestId("update-logs");
+//   const initialCounter = context.current.logsStore.numberOfLogs;
+//   expect(initialCounter).toBe(0);
 
-  const initialData = context.current.logsStore.logData;
-  expect(initialData).toBe("");
+//   fireEvent.click(incrementLogsButton);
 
-  fireEvent.click(updateLogDataButton);
+//   const updatedCounter = context.current.logsStore.numberOfLogs;
+//   expect(updatedCounter).toBe(1);
+// });
 
-  const updatedData = context.current.logsStore.logData;
-  expect(updatedData).not.toEqual(initialData);
-});
+// test("update logs updates store", () => {
+//   render(<App />);
+//   const { result: context } = renderHook(() => useContext(RootStoreContext));
+//   const updateLogDataButton = screen.getByTestId("update-logs");
+
+//   const initialData = context.current.logsStore.logData;
+//   expect(initialData).toBe("");
+
+//   fireEvent.click(updateLogDataButton);
+
+//   const updatedData = context.current.logsStore.logData;
+//   expect(updatedData).not.toEqual(initialData);
+// });

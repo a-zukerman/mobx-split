@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 import { renderHook } from "@testing-library/react-hooks";
-import { useContext } from "react";
+import { useContext, Provider } from "react";
 import { RootStoreContext } from "../store/RootStore";
 import * as getCountryApiModule from "../store/countryStore/api/getCountryApiCall";
 
@@ -34,7 +34,6 @@ test("countryData updates triggers computed isCountryLoaded", async () => {
   spy.mockImplementation(() =>
     Promise.resolve(JSON.parse(europeanCountryMock))
   );
-
   await context.current.countryStore.getCountryData("randomstring");
 
   expect(context.current.countryStore.isCountryLoaded()).toBe(true);

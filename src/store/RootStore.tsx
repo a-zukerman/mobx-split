@@ -7,6 +7,7 @@ export class RootStore {
   countryStore: CountryStore;
 
   constructor() {
+    // console.log("Store ID", Math.random());
     this.logsStore = new LogsStore();
     this.countryStore = new CountryStore();
   }

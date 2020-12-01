@@ -1,9 +1,8 @@
-import React, { useContext } from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
+import React from "react";
+import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import App from "../App";
-import { renderHook } from "@testing-library/react-hooks";
-import { RootProvider, RootStore, RootStoreContext } from "../store/RootStore";
+import { RootProvider, RootStore } from "../store/RootStore";
 
 const mockCountry = [
   {
@@ -95,38 +94,31 @@ test("renders increment logs button", () => {
 //   expect(numberOfLogsComponent).toBeInTheDocument();
 // });
 
-// test("renders numbers of logs and data", () => {
-//   render(<App />);
-//   const numberOfLogsComponent = screen.getByTestId(
-//     "container-number-of-logs-and-data"
-//   );
-//   expect(numberOfLogsComponent).toBeInTheDocument();
-// });
+test("increment logs updates store", () => {
+  render(<App />);
+  const incrementLogsButton = screen.getByTestId("increment-logs");
+  const rootStore = new RootStore();
+  const initialCounter = rootStore.logsStore.numberOfLogs;
+  expect(initialCounter).toBe(0);
 
-// test("increment logs updates store", () => {
-//   render(<App />);
-//   const { result: context } = renderHook(() => useContext(RootStoreContext));
-//   const incrementLogsButton = screen.getByTestId("increment-logs");
+  //   const initialCounter = context.current.logsStore.numberOfLogs;
+  //   expect(initialCounter).toBe(0);
 
-//   const initialCounter = context.current.logsStore.numberOfLogs;
-//   expect(initialCounter).toBe(0);
+  const updatedCounter = rootStore.logsStore.numberOfLogs;
+  expect(updatedCounter).toBe(1);
+});
 
-//   fireEvent.click(incrementLogsButton);
+test("update logs updates store", () => {
+  render(<App />);
+  const updateLogDataButton = screen.getByTestId("update-logs");
+  const rootStore = new RootStore();
 
-//   const updatedCounter = context.current.logsStore.numberOfLogs;
-//   expect(updatedCounter).toBe(1);
-// });
+  const initialData = rootStore.logsStore.logData;
+  expect(initialData).toBe("");
 
-// test("update logs updates store", () => {
-//   render(<App />);
-//   const { result: context } = renderHook(() => useContext(RootStoreContext));
-//   const updateLogDataButton = screen.getByTestId("update-logs");
+  //   const initialData = context.current.logsStore.logData;
+  //   expect(initialData).toBe("");
 
-//   const initialData = context.current.logsStore.logData;
-//   expect(initialData).toBe("");
-
-//   fireEvent.click(updateLogDataButton);
-
-//   const updatedData = context.current.logsStore.logData;
-//   expect(updatedData).not.toEqual(initialData);
-// });
+  const updatedData = rootStore.logsStore.logData;
+  expect(updatedData).not.toEqual(initialData);
+});
